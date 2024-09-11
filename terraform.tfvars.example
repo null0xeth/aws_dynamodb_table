@@ -1,0 +1,37 @@
+dynamodb_global_config = {
+  billing_mode                   = "PROVISIONED"
+  deletion_protection_enabled    = false
+  global_secondary_index_enabled = false
+  kms_key_arn                    = null
+  name                           = "terraform-lock"
+  read_capacity_units            = 5
+  replication_enabled            = false
+  server_side_encryption_enabled = true
+  write_capacity_units           = 5
+}
+
+dynamodb_stream_config = {
+  enabled   = false
+  view_type = "KEYS_ONLY"
+}
+
+
+dynamodb_table_config = {
+  attribute_name     = "LockID"
+  attribute_type     = "S"
+  create             = true
+  hash_key           = "LockID"
+  table_class        = "STANDARD"
+  ttl_attribute_name = "TimeToExist"
+  ttl_enabled        = false
+}
+
+global_config = {
+  append_random_id        = true
+  resource_policy_enabled = false
+}
+
+resource_tags = {
+  Managed_by = "terraform"
+  Name       = "not-set-yet"
+}
