@@ -28,7 +28,7 @@ resource "aws_dynamodb_table" "new" {
   }
 
   dynamic "replica" {
-    for_each = var.global.replication_enabled ? var.replica_config : {}
+    for_each = var.config.replication_enabled ? var.replica_config : {}
     content {
       kms_key_arn            = each.value.kms_key_arn
       point_in_time_recovery = each.value.point_in_time_recovery
@@ -43,7 +43,7 @@ resource "aws_dynamodb_table" "new" {
   }
 
   dynamic "global_secondary_index" {
-    for_each = var.global.global_secondary_index_enabled ? var.global_secondary_index : {}
+    for_each = var.config.global_secondary_index_enabled ? var.global_secondary_index : {}
     content {
       name               = each.value.key
       hash_key           = each.value.hash_key
