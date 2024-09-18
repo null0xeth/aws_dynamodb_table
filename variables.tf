@@ -15,16 +15,17 @@ variable "provider_aws" {
   default = {}
 }
 
-variable "global_config" {
+variable "global" {
   type = object({
-    append_random_id        = optional(bool, true)
-    resource_policy_enabled = optional(bool, false)
-    resource_policy         = optional(any)
+    append_random_id = optional(bool, true)
+    enable_policy    = optional(bool, false)
+    #resource_policy_enabled = optional(bool, false)
+    resource_policy = optional(any)
   })
   default = {}
 }
 
-variable "dynamodb_global_config" {
+variable "config" {
   default = {}
   type = object({
     name                           = optional(string, "terraform-lock")
@@ -39,7 +40,7 @@ variable "dynamodb_global_config" {
   })
 }
 
-variable "dynamodb_replica_config" {
+variable "replica_config" {
   type = map(object({
     kms_key_arn            = optional(string)
     point_in_time_recovery = optional(bool, true)
@@ -49,7 +50,7 @@ variable "dynamodb_replica_config" {
   default = null
 }
 
-variable "dynamodb_stream_config" {
+variable "stream_config" {
   default = {}
   type = object({
     enabled   = optional(bool, false)
@@ -57,7 +58,7 @@ variable "dynamodb_stream_config" {
   })
 }
 
-variable "dynamodb_table_config" {
+variable "table_config" {
   default = {}
   type = object({
     attribute_name     = optional(string)
@@ -72,7 +73,7 @@ variable "dynamodb_table_config" {
   description = "Name of the DynamoDB table"
 }
 
-variable "dynamodb_table_global_secondary_index" {
+variable "global_secondary_index" {
   type = map(object({
     name               = optional(string)
     hash_key           = optional(string)
