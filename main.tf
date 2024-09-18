@@ -3,32 +3,32 @@ data "aws_region" "active" {}
 
 ########### RANDOM ID #####################################################################
 resource "random_pet" "env" {
-  count     = var.global_config.append_random_id ? 1 : 0
+  count     = var.global.append_random_id ? 1 : 0
   length    = 2
   separator = "_"
 }
 
 ########### DYNAMO DB #####################################################################
 resource "aws_dynamodb_table" "new" {
-  count                       = var.dynamodb_table_config.create ? 1 : 0
-  name                        = var.global_config.append_random_id ? "${var.dynamodb_global_config.name}-${element(random_pet.env[*], 0).id}" : "${var.dynamodb_global_config.name}"
-  billing_mode                = var.dynamodb_global_config.billing_mode
-  deletion_protection_enabled = var.dynamodb_global_config.deletion_protection_enabled
-  read_capacity               = var.dynamodb_global_config.read_capacity_units
-  write_capacity              = var.dynamodb_global_config.write_capacity_units
+  count                       = var.table_config.create ? 1 : 0
+  name                        = var.global.append_random_id ? "${var.global.name}-${element(random_pet.env[*], 0).id}" : "${var.global.name}"
+  billing_mode                = var.global.billing_mode
+  deletion_protection_enabled = var.global.deletion_protection_enabled
+  read_capacity               = var.global.read_capacity_units
+  write_capacity              = var.global.write_capacity_units
   stream_enabled              = var.dynamodb_stream_config.enabled
   stream_view_type            = var.dynamodb_stream_config.view_type
-  table_class                 = var.dynamodb_table_config.table_class
-  hash_key                    = var.dynamodb_table_config.hash_key
-  range_key                   = var.dynamodb_table_config.range_key
+  table_class                 = var.table_config.table_class
+  hash_key                    = var.table_config.hash_key
+  range_key                   = var.table_config.range_key
 
   attribute {
-    name = var.dynamodb_table_config.attribute_name
-    type = var.dynamodb_table_config.attribute_type
+    name = var.table_config.attribute_name
+    type = var.table_config.attribute_type
   }
 
   dynamic "replica" {
-    for_each = var.dynamodb_global_config.replication_enabled ? var.dynamodb_replica_config : {}
+    for_each = var.global.replication_enabled ? var.replica_config : {}
     content {
       kms_key_arn            = each.value.kms_key_arn
       point_in_time_recovery = each.value.point_in_time_recovery
@@ -38,12 +38,12 @@ resource "aws_dynamodb_table" "new" {
   }
 
   server_side_encryption {
-    enabled     = var.dynamodb_global_config.server_side_encryption_enabled
-    kms_key_arn = var.dynamodb_global_config.kms_key_arn
+    enabled     = var.global.server_side_encryption_enabled
+    kms_key_arn = var.global.kms_key_arn
   }
 
   dynamic "global_secondary_index" {
-    for_each = var.dynamodb_global_config.global_secondary_index_enabled ? var.dynamodb_table_global_secondary_index : {}
+    for_each = var.global.global_secondary_index_enabled ? var.global_secondary_index : {}
     content {
       name               = each.value.key
       hash_key           = each.value.hash_key
@@ -56,8 +56,8 @@ resource "aws_dynamodb_table" "new" {
   }
 
   ttl {
-    attribute_name = var.dynamodb_table_config.ttl_enabled ? var.dynamodb_table_config.ttl_attribute_name : null
-    enabled        = var.dynamodb_table_config.ttl_enabled
+    attribute_name = var.table_config.ttl_enabled ? var.table_config.ttl_attribute_name : null
+    enabled        = var.table_config.ttl_enabled
   }
 
   tags = {
@@ -66,7 +66,7 @@ resource "aws_dynamodb_table" "new" {
 }
 
 resource "aws_dynamodb_resource_policy" "new" {
-  count        = var.global_config.resource_policy_enabled ? 1 : 0
+  count        = var.global.resource_policy_enabled ? 1 : 0
   resource_arn = element(aws_dynamodb_table.new[*], 0).arn
-  policy       = var.global_config.resource_policy
+  policy       = var.global.resource_policy
 }
