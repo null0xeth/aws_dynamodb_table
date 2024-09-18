@@ -66,7 +66,7 @@ resource "aws_dynamodb_table" "new" {
 }
 
 resource "aws_dynamodb_resource_policy" "new" {
-  count        = var.global.resource_policy_enabled ? 1 : 0
+  count        = var.config.enable_policy ? 1 : 0
   resource_arn = element(aws_dynamodb_table.new[*], 0).arn
   policy       = var.global.resource_policy
 }
