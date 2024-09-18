@@ -16,8 +16,8 @@ resource "aws_dynamodb_table" "new" {
   deletion_protection_enabled = var.global.deletion_protection_enabled
   read_capacity               = var.global.read_capacity_units
   write_capacity              = var.global.write_capacity_units
-  stream_enabled              = var.dynamodb_stream_config.enabled
-  stream_view_type            = var.dynamodb_stream_config.view_type
+  stream_enabled              = var.stream_config.enabled
+  stream_view_type            = var.stream_config.view_type
   table_class                 = var.table_config.table_class
   hash_key                    = var.table_config.hash_key
   range_key                   = var.table_config.range_key
