@@ -12,10 +12,10 @@ resource "random_pet" "env" {
 resource "aws_dynamodb_table" "new" {
   count                       = var.table_config.create ? 1 : 0
   name                        = var.global.append_random_id ? "${var.global.name}-${element(random_pet.env[*], 0).id}" : "${var.global.name}"
-  billing_mode                = var.global.billing_mode
-  deletion_protection_enabled = var.global.deletion_protection_enabled
-  read_capacity               = var.global.read_capacity_units
-  write_capacity              = var.global.write_capacity_units
+  billing_mode                = var.config.billing_mode
+  deletion_protection_enabled = var.config.deletion_protection_enabled
+  read_capacity               = var.config.read_capacity_units
+  write_capacity              = var.config.write_capacity_units
   stream_enabled              = var.stream_config.enabled
   stream_view_type            = var.stream_config.view_type
   table_class                 = var.table_config.table_class
@@ -38,8 +38,8 @@ resource "aws_dynamodb_table" "new" {
   }
 
   server_side_encryption {
-    enabled     = var.global.server_side_encryption_enabled
-    kms_key_arn = var.global.kms_key_arn
+    enabled     = var.config.server_side_encryption_enabled
+    kms_key_arn = var.config.kms_key_arn
   }
 
   dynamic "global_secondary_index" {
