@@ -11,7 +11,7 @@ resource "random_pet" "env" {
 ########### DYNAMO DB #####################################################################
 resource "aws_dynamodb_table" "new" {
   count                       = var.table_config.create ? 1 : 0
-  name                        = var.global.append_random_id ? "${var.global.name}-${element(random_pet.env[*], 0).id}" : "${var.global.name}"
+  name                        = var.global.append_random_id ? "${var.config.name}-${element(random_pet.env[*], 0).id}" : "${var.config.name}"
   billing_mode                = var.config.billing_mode
   deletion_protection_enabled = var.config.deletion_protection_enabled
   read_capacity               = var.config.read_capacity_units
