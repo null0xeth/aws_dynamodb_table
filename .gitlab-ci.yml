@@ -9,15 +9,15 @@ variables:
   SCAN_JOB_NAME: SAST iac
 
 include:
-  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/build@1.0.5
+  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/build@latest
     inputs:
       job_name: ${BUILD_JOB_NAME}
       stage: build
-  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/sast-iac@1.0.5
+  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/sast-iac@latest
     inputs:
       job_name: ${SCAN_JOB_NAME}
       stage: test
-  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/deploy@1.0.5
+  - component: $CI_SERVER_FQDN/components/terraform/terraform-module-registry/deploy@latest
     inputs:
       build_job_name: ${BUILD_JOB_NAME}
       deploy_job_name: ${DEPLOY_JOB_NAME}
